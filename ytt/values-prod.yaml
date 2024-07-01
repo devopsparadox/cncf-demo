@@ -1,0 +1,12 @@
+image:
+  repository: index.docker.io/vfarcic/cncf-demo
+  tag: v0.0.1
+db:
+  enabled:
+    crossplane:
+      aws: true
+  id: cncf-demo-db
+  insecure: true
+  size: small
+schemahero:
+  enabled: true

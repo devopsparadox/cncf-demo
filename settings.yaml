@@ -14,3 +14,4 @@ production:
     location: eastus
   google:
     projectId: dot-20240329204252
+secrets: eso

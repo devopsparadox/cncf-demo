@@ -5,6 +5,9 @@ resources:
   - postgresql-crossplane-aws.yaml
   - postgresql-crossplane-secret-aws.yaml
   - postgresql-crossplane-schema-aws.yaml
+  - gateway.yaml
+  - rollout.yaml
+  - virtual-service.yaml
 patchesJson6902:
   - path: ingress.yaml
     target:

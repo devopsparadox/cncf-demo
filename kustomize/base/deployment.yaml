@@ -33,3 +33,4 @@ spec:
             httpGet:
               path: /
               port: 8080
+  replicas: 0

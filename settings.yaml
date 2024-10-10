@@ -14,5 +14,5 @@ production:
     location: eastus
   google:
     projectId: dot-20240911125241
-hyperscaler: google
+hyperscaler: aws
 secrets: eso

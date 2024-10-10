@@ -9,7 +9,7 @@ metadata:
 spec:
   project: production
   source:
-    repoURL: https://github.com/vfarcic/cncf-demo
+    repoURL: https://github.com/devopsparadox/cncf-demo.git
     targetRevision: HEAD
     path: apps
   destination:
@@ -31,7 +31,7 @@ metadata:
 spec:
   project: production
   source:
-    repoURL: https://github.com/vfarcic/cncf-demo
+    repoURL: https://github.com/devopsparadox/cncf-demo.git
     targetRevision: HEAD
     path: infra
   destination:

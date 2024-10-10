@@ -7,7 +7,7 @@ spec:
   gateways:
     - cncf-demo-gateway
   hosts:
-    - cncf-demo.34.139.252.110.nip.io
+    - cncf-demo.54.80.234.73.nip.io
   http:
     - name: primary
       route:
@@ -30,7 +30,7 @@ spec:
   gateways:
     - cncf-demo-gateway
   hosts:
-    - cncf-demo.34.139.252.110.nip.io
+    - cncf-demo.54.80.234.73.nip.io
   http:
     - name: secondary
       route:

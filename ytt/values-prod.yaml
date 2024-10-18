@@ -13,3 +13,10 @@ db:
   id: cncf-demo-db
   insecure: true
   size: small
+istio:
+  host: cncf-demo.44.208.195.106.nip.io
+  enabled: true
+replicas: 0
+progressiveDelivery:
+  enabled: true
+  type: argo-rollouts

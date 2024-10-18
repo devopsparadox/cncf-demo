@@ -28,7 +28,7 @@ spec:
         startingStep: 2
         args:
           - name: service-name
-            value: #@ data.values.name + "-canary"
+            value: #@ data.values.name + "-canary.production.svc.cluster.local"
       steps:
         - setWeight: 20
         - pause: {duration: 60}

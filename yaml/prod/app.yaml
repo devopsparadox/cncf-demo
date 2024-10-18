@@ -24,7 +24,7 @@ spec:
         startingStep: 2
         args:
         - name: service-name
-          value: cncf-demo-canary
+          value: cncf-demo-canary.production.svc.cluster.local
       steps:
       - setWeight: 20
       - pause:

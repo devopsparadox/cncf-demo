@@ -14,15 +14,6 @@ echo "export KUBECONFIG=$KUBECONFIG" >> .env
 
 helm repo update
 
-AWS_ACCESS_KEY_ID=$(gum input --placeholder "AWS Access Key ID" --value "$AWS_ACCESS_KEY_ID")
-echo "export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" >> .env
-
-AWS_SECRET_ACCESS_KEY=$(gum input --placeholder "AWS Secret Access Key" --value "$AWS_SECRET_ACCESS_KEY" --password)
-echo "export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> .env
-
-AWS_ACCOUNT_ID=$(gum input --placeholder "AWS Account ID" --value "$AWS_ACCOUNT_ID")
-echo "export AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID" >> .env
-
 echo "[default]
 aws_access_key_id = $AWS_ACCESS_KEY_ID
 aws_secret_access_key = $AWS_SECRET_ACCESS_KEY

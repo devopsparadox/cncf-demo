@@ -15,3 +15,10 @@ db:
   size: small
 otel:
   enabled: true
+istio:
+  enabled: true
+  host: cncf-demo.34.226.47.201.nip.io
+progressiveDelivery:
+  enabled: true
+  type: argo-rollouts
+replicas: 0

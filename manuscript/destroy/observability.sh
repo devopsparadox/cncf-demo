@@ -42,7 +42,7 @@ elif [[ "$HYPERSCALER" == "aws" ]]; then
 	helm --namespace kube-system delete cilium
 	set -e
 
-	eksctl delete addon --name aws-ebs-csi-driver --cluster dot-production --region us-east-1
+	# eksctl delete addon --name aws-ebs-csi-driver --cluster dot-production --region us-east-1
 
 	eksctl delete nodegroup --name primary --cluster dot-production --drain=false --region us-east-1 --wait
 

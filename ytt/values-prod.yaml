@@ -13,3 +13,5 @@ db:
   id: cncf-demo-db
   insecure: true
   size: small
+otel:
+  enabled: true

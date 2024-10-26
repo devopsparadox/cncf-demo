@@ -13,3 +13,6 @@ db:
   id: cncf-demo-db
   insecure: true
   size: small
+istio:
+  enabled: true
+  host: cncf-demo.34.200.39.77.nip.io

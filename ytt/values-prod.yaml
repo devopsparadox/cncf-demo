@@ -1,2 +1,15 @@
 schemahero:
-  enabled: false
+  enabled: true
+image:
+  repository: index.docker.io/vfarcic/cncf-demo
+  tag: v0.0.1
+ingress:
+  host: cncf-demo.34.203.2.152.nip.io
+  className: contour
+db:
+  enabled:
+    crossplane:
+      aws: true
+  id: cncf-demo-db
+  insecure: true
+  size: small

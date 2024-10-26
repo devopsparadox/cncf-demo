@@ -1,13 +1,13 @@
 gitOps:
   app: argocd
 ingress:
-  host: 35.237.234.228.nip.io
+  host: 34.203.2.152.nip.io
   classname: contour
 image: index.docker.io/vfarcic/cncf-demo
 tag: v0.0.1
-templates: helm
+templates: ytt
 crossplane:
-  destination: google
+  destination: aws
 production:
   azure:
     resourceGroup: dot-20240123133515

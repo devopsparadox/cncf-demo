@@ -1,22 +1,25 @@
 ---
+
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cncf-demo
+  name: schema-hero
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: production
   source:
-    repoURL: https://github.com/devopsparadox/cncf-demo.git
+    repoURL: https://github.com/vfarcic/cncf-demo
     targetRevision: HEAD
-    path: yaml/prod
+    path: schema-hero
   destination:
     server: https://kubernetes.default.svc
-    namespace: production
+    namespace: schemahero-system
   syncPolicy:
     automated:
       selfHeal: true
       prune: true
       allowEmpty: true
+    syncOptions:
+      - CreateNamespace=true

@@ -1,0 +1,170 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cncf-demo
+  labels:
+    app.kubernetes.io/name: cncf-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cncf-demo
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: cncf-demo
+    spec:
+      containers:
+      - name: main
+        image: index.docker.io/vfarcic/cncf-demo:v0.0.1
+        ports:
+        - containerPort: 8080
+        resources:
+          limits:
+            cpu: 500m
+            memory: 512Mi
+          requests:
+            cpu: 250m
+            memory: 256Mi
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+        env:
+        - name: DB_ENDPOINT
+          valueFrom:
+            secretKeyRef:
+              name: cncf-demo-db
+              key: endpoint
+        - name: DB_PORT
+          valueFrom:
+            secretKeyRef:
+              name: cncf-demo-db
+              key: port
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: cncf-demo-db
+              key: username
+        - name: DB_PASS
+          valueFrom:
+            secretKeyRef:
+              name: cncf-demo-db
+              key: password
+        - name: DB_NAME
+          value: cncf-demo-db
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cncf-demo
+  labels:
+    app.kubernetes.io/name: cncf-demo
+spec:
+  ingressClassName: contour
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: cncf-demo
+            port:
+              number: 8080
+    host: cncf-demo.34.203.2.152.nip.io
+---
+apiVersion: devopstoolkitseries.com/v1alpha1
+kind: SQLClaim
+metadata:
+  name: cncf-demo
+spec:
+  id: cncf-demo-db
+  compositionSelector:
+    matchLabels:
+      provider: aws
+      db: postgresql
+  parameters:
+    version: "16.2"
+    size: small
+    databases:
+    - cncf-demo-db
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cncf-demo-db-password
+data:
+  password: T1QrOXZQcDhMdXhoeFVQWVpLSk1kUG1YM04xTzBTd3YzWG5ZVjI0UFZzcz0=
+---
+apiVersion: databases.schemahero.io/v1alpha4
+kind: Database
+metadata:
+  name: cncf-demo
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+spec:
+  immediateDeploy: true
+  connection:
+    postgres:
+      host:
+        valueFrom:
+          secretKeyRef:
+            name: cncf-demo-db
+            key: endpoint
+      user:
+        value: masteruser
+      password:
+        valueFrom:
+          secretKeyRef:
+            name: cncf-demo-db
+            key: password
+      port:
+        value: "5432"
+      dbname:
+        value: cncf-demo-db
+      sslmode:
+        value: prefer
+---
+apiVersion: schemas.schemahero.io/v1alpha4
+kind: Table
+metadata:
+  name: cncf-demo-videos
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+spec:
+  database: cncf-demo-db
+  name: videos
+  schema:
+    postgres:
+      primaryKey:
+      - id
+      columns:
+      - name: id
+        type: text
+        constraints:
+          notNull: true
+      - name: title
+        type: text
+        constraints:
+          notNull: true
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cncf-demo
+  labels:
+    app.kubernetes.io/name: cncf-demo
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  selector:
+    app.kubernetes.io/name: cncf-demo

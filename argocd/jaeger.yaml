@@ -31,9 +31,9 @@ spec:
         - name: allInOne.ingress.enabled
           value: "true"
         - name: allInOne.ingress.ingressClassName
-          value: nginx
+          value: contour
         - name: allInOne.ingress.hosts[0]
-          value: acme.com
+          value: jaeger.34.203.2.152.nip.io
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring

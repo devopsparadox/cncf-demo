@@ -1,15 +1,15 @@
 grafana:
   ingress:
     enabled: true
-    ingressClassName: nginx
+    ingressClassName: contour
     hosts:
-      - grafana.127.0.0.1.nip.io
+      - grafana.34.203.2.152.nip.io
 prometheus:
   ingress:
     enabled: true
-    ingressClassName: nginx
+    ingressClassName: contour
     hosts:
-      - prometheus.127.0.0.1.nip.io
+      - prometheus.34.203.2.152.nip.io
   prometheusSpec:
     additionalScrapeConfigs:
       - job_name: istiod

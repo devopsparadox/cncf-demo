@@ -18,3 +18,7 @@ istio:
   host: cncf-demo.34.200.39.77.nip.io
 otel:
   enabled: true
+progressiveDelivery:
+  enabled: true
+  type: argo-rollouts
+replicas: 0

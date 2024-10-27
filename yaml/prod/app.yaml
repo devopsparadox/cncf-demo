@@ -1,3 +1,78 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: cncf-demo
+spec:
+  replicas: 5
+  strategy:
+    canary:
+      canaryService: cncf-demo-canary
+      stableService: cncf-demo-primary
+      trafficRouting:
+        istio:
+          virtualServices:
+          - name: cncf-demo-1
+            routes:
+            - primary
+          - name: cncf-demo-2
+            routes:
+            - secondary
+      analysis:
+        templates:
+        - templateName: success-rate
+          clusterScope: true
+        startingStep: 2
+        args:
+        - name: service-name
+          value: cncf-demo-canary.production.svc.cluster.local
+      steps:
+      - setWeight: 20
+      - pause:
+          duration: 60
+      - setWeight: 40
+      - pause:
+          duration: 60
+      - setWeight: 60
+      - pause:
+          duration: 60
+      - setWeight: 80
+      - pause:
+          duration: 60
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cncf-demo
+  workloadRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: cncf-demo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cncf-demo-canary
+spec:
+  ports:
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  selector:
+    app.kubernetes.io/name: cncf-demo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cncf-demo-primary
+spec:
+  ports:
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  selector:
+    app.kubernetes.io/name: cncf-demo
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -5,7 +80,7 @@ metadata:
   labels:
     app.kubernetes.io/name: cncf-demo
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app.kubernetes.io/name: cncf-demo
@@ -72,6 +147,21 @@ spec:
           privileged: true
           runAsUser: 0
       shareProcessNamespace: true
+---
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: cncf-demo-gateway
+spec:
+  selector:
+    istio: ingress
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - '*'
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -183,3 +273,49 @@ spec:
     name: http
   selector:
     app.kubernetes.io/name: cncf-demo
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: cncf-demo-1
+spec:
+  gateways:
+  - cncf-demo-gateway
+  hosts:
+  - cncf-demo.34.200.39.77.nip.io
+  http:
+  - name: primary
+    route:
+    - destination:
+        host: cncf-demo-primary
+        port:
+          number: 8080
+      weight: 100
+    - destination:
+        host: cncf-demo-canary
+        port:
+          number: 8080
+      weight: 0
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: cncf-demo-2
+spec:
+  gateways:
+  - cncf-demo-gateway
+  hosts:
+  - cncf-demo.34.200.39.77.nip.io
+  http:
+  - name: secondary
+    route:
+    - destination:
+        host: cncf-demo-primary
+        port:
+          number: 8080
+      weight: 100
+    - destination:
+        host: cncf-demo-canary
+        port:
+          number: 8080
+      weight: 0

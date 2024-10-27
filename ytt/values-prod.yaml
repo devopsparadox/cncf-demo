@@ -2,7 +2,7 @@ schemahero:
   enabled: true
 image:
   repository: index.docker.io/vfarcic/cncf-demo
-  tag: v0.0.2
+  tag: v0.0.3
 ingress:
   host: cncf-demo.34.203.2.152.nip.io
   className: contour
